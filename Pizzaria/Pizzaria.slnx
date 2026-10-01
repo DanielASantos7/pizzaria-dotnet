@@ -1,5 +1,5 @@
 <Solution>
   <Project Path="../src/Pizzaria.API/Pizzaria.API.csproj" />
-  <Project Path="../src/Pizzaria.Desktop/Pizzaria.Desktop.csproj" />
+  <Project Path="../src/Pizzaria.Desktop/Pizzaria.Desktop.csproj" Id="0f82e7e9-e6d2-4a12-bf6b-8efc38307816" />
   <Project Path="../src/Pizzaria.Mobile/Pizzaria.Mobile.csproj" />
 </Solution>

@@ -3,6 +3,7 @@ using Pizzaria.API.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configura injeção de Dependência do DbContext com SQL Server
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found");
 
