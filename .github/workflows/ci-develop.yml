@@ -1,0 +1,25 @@
+# Nome que aparecerá no painel de "Actions" do repositório no GitHub
+name: Continuous Integration - Develop
+
+# Triggers - Define exatamente quando este pipeline automático deve disparar
+on:
+  push:
+    branches: [ "develop" ]        # Quando houver um push direto na branch develop, dispara o pipeline
+  pull_request:
+    branches: [ "develop" ]        # Quando um PR for aberto ou atualizado para a branch develop, dispara o pipeline
+
+# Jobs - Um job representa um ambiente isolado (virtual machine) para executar os passos.
+jobs: 
+  build-and-validate:
+    name: Validar Compilação da Solução (.NET 8 & 10)
+
+    # windows-lastest para dar suporte à compilação do WinForms e workloads do Mobile (.NET MAIU)
+    runs-on: windows-lastest
+
+    # steps - lista sequencial de passos do inicio ao fim
+    steps: 
+      # Clona o código fonte para a VM do GitHub
+      - name: Checkout do Repositório
+        uses: actions/checkout@v4
+
+      # Baixa e instala os SDKs do .NET exigidos pelos projetos da solução
