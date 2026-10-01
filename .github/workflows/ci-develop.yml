@@ -36,9 +36,9 @@ jobs:
 
       # Baixa todas as dependências de todos os projetos
       - name: Restaurar Pacotes NuGet da Solução
-        run: dotnet restore Pizzaria.sln
+        run: dotnet restore Pizzaria.slnx
 
       # Compila todos os projetos em modo Release.
       # Se houver qualquer erro de sintaxe ou referência quebrada, o build falha aqui
       - name: Compilar Solução (Configuration Release)
-        run: dotnet build Pizzaria.sln --configuration Release --no-restore
+        run: dotnet build Pizzaria.slnx --configuration Release --no-restore
