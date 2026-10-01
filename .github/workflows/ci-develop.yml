@@ -13,7 +13,7 @@ jobs:
   build-and-validate:
     name: Validar Compilação da Solução (.NET 8 & 10)
 
-    # windows-lastest para dar suporte à compilação do WinForms e workloads do Mobile (.NET MAIU)
+    # windows-lastest para dar suporte à compilação do WinForms e workloads do Mobile (.NET MAUI)
     runs-on: windows-lastest
 
     # steps - lista sequencial de passos do inicio ao fim
@@ -23,3 +23,22 @@ jobs:
         uses: actions/checkout@v4
 
       # Baixa e instala os SDKs do .NET exigidos pelos projetos da solução
+      - name: Configurar SDKs do .NET (8.0 & 10.0)
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            10.0.x
+
+      # Instala workload do .NET MAUI para compilar o projeto Pizzaria.Mobile
+      - name: Instalar Workload do .NET MAUI
+        run: dotnet workload install maui
+
+      # Baixa todas as dependências de todos os projetos
+      - name: Restaurar Pacotes NuGet da Solução
+        run: dotnet restore Pizzaria.sln
+
+      # Compila todos os projetos em modo Release.
+      # Se houver qualquer erro de sintaxe ou referência quebrada, o build falha aqui
+      - name: Compilar Solução (Configuration: Release)
+        ruin: dotnet build Pizzaria.sln --configuration Release --no-restore
