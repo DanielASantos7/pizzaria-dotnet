@@ -41,4 +41,4 @@ jobs:
       # Compila todos os projetos em modo Release.
       # Se houver qualquer erro de sintaxe ou referência quebrada, o build falha aqui
       - name: Compilar Solução (Configuration Release)
-        ruin: dotnet build Pizzaria.sln --configuration Release --no-restore
+        run: dotnet build Pizzaria.sln --configuration Release --no-restore
