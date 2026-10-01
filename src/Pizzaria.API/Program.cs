@@ -1,4 +1,13 @@
+using Microsoft.EntityFrameworkCore;
+using Pizzaria.API.Infrastructure.Data;
+
 var builder = WebApplication.CreateBuilder(args);
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found");
+
+builder.Services.AddDbContext<AppDbContext>(opt =>
+    opt.UseSqlServer(connectionString));
 
 // Add services to the container.
 

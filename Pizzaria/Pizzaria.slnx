@@ -1,1 +1,5 @@
-<Solution />
+<Solution>
+  <Project Path="../src/Pizzaria.API/Pizzaria.API.csproj" />
+  <Project Path="../src/Pizzaria.Desktop/Pizzaria.Desktop.csproj" />
+  <Project Path="../src/Pizzaria.Mobile/Pizzaria.Mobile.csproj" />
+</Solution>
