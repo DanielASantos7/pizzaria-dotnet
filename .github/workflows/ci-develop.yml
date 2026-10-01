@@ -4,7 +4,7 @@ name: Continuous Integration - Develop
 # Triggers - Define exatamente quando este pipeline automático deve disparar
 on:
   push:
-    branches: [ "develop" ]        # Quando houver um push direto na branch develop, dispara o pipeline
+    branches: [ "develop", "feature/**" ]        # Dispara o pipeline em pushes na branch develop e em branches de feature
   pull_request:
     branches: [ "develop" ]        # Quando um PR for aberto ou atualizado para a branch develop, dispara o pipeline
 
@@ -29,10 +29,11 @@ jobs:
           dotnet-version: |
             8.0.x
             10.0.x
+          include-prerelease: true        # Habilita suporte para versões pré-lançamento/preview (.NET 10)
 
       # Instala workload do .NET MAUI para compilar o projeto Pizzaria.Mobile
       - name: Instalar Workload do .NET MAUI
-        run: dotnet workload install maui
+        run: dotnet workload install maui --ignore-failed-sources
 
       # Baixa todas as dependências de todos os projetos
       - name: Restaurar Pacotes NuGet da Solução
