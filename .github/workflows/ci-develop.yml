@@ -13,10 +13,10 @@ jobs:
   build-and-validate:
     name: Validar Compilação da Solução (.NET 8 & 10)
 
-    # windows-lastest para dar suporte à compilação do WinForms e workloads do Mobile (.NET MAUI)
-    runs-on: windows-lastest
+    # windows-latest para dar suporte à compilação do WinForms e workloads do Mobile (.NET MAUI)
+    runs-on: windows-latest
 
-    # steps - lista sequencial de passos do inicio ao fim
+    # steps - lista sequencial de passos do início ao fim
     steps: 
       # Clona o código fonte para a VM do GitHub
       - name: Checkout do Repositório
