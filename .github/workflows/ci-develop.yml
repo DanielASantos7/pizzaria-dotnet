@@ -33,13 +33,15 @@ jobs:
 
       # Instala workload do .NET MAUI para compilar o projeto Pizzaria.Mobile
       - name: Instalar Workload do .NET MAUI
-        run: dotnet workload install maui --ignore-failed-sources
+        run: dotnet workload install maui --include-pre-releases --ignore-failed-sources
 
       # Baixa todas as dependências de todos os projetos
       - name: Restaurar Pacotes NuGet da Solução
-        run: dotnet restore Pizzaria/Pizzaria.slnx
+        run: |
+          dotnet workload restore Pizzaria/Pizzaria.slnx
+          dotnet restore Pizzaria/Pizzaria.slnx
 
       # Compila todos os projetos em modo Release.
       # Se houver qualquer erro de sintaxe ou referência quebrada, o build falha aqui
       - name: Compilar Solução (Configuration Release)
-        run: dotnet build Pizzaria/Pizzaria.slnx --configuration Release --no-restore
+        run: dotnet build Pizzaria/Pizzaria.slnx --configuration Release
