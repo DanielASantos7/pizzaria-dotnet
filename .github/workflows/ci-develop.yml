@@ -31,17 +31,22 @@ jobs:
             10.0.x
           include-prerelease: true        # Habilita suporte para versões pré-lançamento/preview (.NET 10)
 
-      # Instala workload do .NET MAUI para compilar o projeto Pizzaria.Mobile
+      # Instala workload do .NET MAUI para compilar os projetos móveis e desktop
       - name: Instalar Workload do .NET MAUI
-        run: dotnet workload install maui --include-pre-releases --ignore-failed-sources
+        run: dotnet workload install maui --ignore-failed-sources
 
       # Baixa todas as dependências de todos os projetos
       - name: Restaurar Pacotes NuGet da Solução
-        run: |
-          dotnet workload restore Pizzaria/Pizzaria.slnx
-          dotnet restore Pizzaria/Pizzaria.slnx
+        run: dotnet restore Pizzaria/Pizzaria.slnx
 
-      # Compila todos os projetos em modo Release.
-      # Se houver qualquer erro de sintaxe ou referência quebrada, o build falha aqui
-      - name: Compilar Solução (Configuration Release)
-        run: dotnet build Pizzaria/Pizzaria.slnx --configuration Release
+      # Compila o projeto da API (.NET 8)
+      - name: Compilar API (.NET 8)
+        run: dotnet build src/Pizzaria.API/Pizzaria.API.csproj --configuration Release --no-restore
+
+      # Compila o App MAUI para Android (.NET 10)
+      - name: Compilar MAUI Android (.NET 10)
+        run: dotnet build src/Pizzaria.Mobile/Pizzaria.Mobile.csproj --configuration Release -f net10.0-android --no-restore
+
+      # Compila o App MAUI para Windows Desktop (.NET 10)
+      - name: Compilar MAUI Windows Desktop (.NET 10)
+        run: dotnet build src/Pizzaria.Mobile/Pizzaria.Mobile.csproj --configuration Release -f net10.0-windows10.0.19041.0 -r win-x64
