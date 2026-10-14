@@ -31,24 +31,24 @@ jobs:
             10.0.x
           include-prerelease: true        # Habilita suporte para versões pré-lançamento/preview (.NET 10)
 
-      # Instala workload do .NET MAUI para compilar os projetos móveis e desktop
-      - name: Instalar Workload do .NET MAUI
-        run: dotnet workload install maui --ignore-failed-sources
+      # Instala APENAS as workloads do .NET MAUI para Android e Windows (evita baixar iOS/Mac no runner Windows)
+      - name: Instalar Workloads do .NET MAUI (Android & Windows)
+        run: dotnet workload install maui-android maui-windows --ignore-failed-sources
 
-      # Restaura e compila a API (.NET 8)
+      # Restaura e compila o projeto da API (.NET 8)
       - name: Compilar API (.NET 8)
         run: |
           dotnet restore src/Pizzaria.API/Pizzaria.API.csproj
-          dotnet build src/Pizzaria.API/Pizzaria.API.csproj --configuration Release
+          dotnet build src/Pizzaria.API/Pizzaria.API.csproj --configuration Release --no-restore
 
-      # Restaura e compila o App MAUI para Android (.NET 10)
+      # Restaura e compila o App MAUI direcionado para Android (.NET 10)
       - name: Compilar MAUI Android (.NET 10)
         run: |
-          dotnet restore src/Pizzaria.Mobile/Pizzaria.Mobile.csproj -f net10.0-android
-          dotnet build src/Pizzaria.Mobile/Pizzaria.Mobile.csproj --configuration Release -f net10.0-android
+          dotnet restore src/Pizzaria.Mobile/Pizzaria.Mobile.csproj -p:TargetFramework=net10.0-android
+          dotnet build src/Pizzaria.Mobile/Pizzaria.Mobile.csproj --configuration Release -p:TargetFramework=net10.0-android --no-restore
 
-      # Restaura e compila o App MAUI para Windows Desktop (.NET 10)
+      # Restaura e compila o App MAUI direcionado para Windows Desktop (.NET 10)
       - name: Compilar MAUI Windows Desktop (.NET 10)
         run: |
-          dotnet restore src/Pizzaria.Mobile/Pizzaria.Mobile.csproj -f net10.0-windows10.0.19041.0
-          dotnet build src/Pizzaria.Mobile/Pizzaria.Mobile.csproj --configuration Release -f net10.0-windows10.0.19041.0 -r win-x64
+          dotnet restore src/Pizzaria.Mobile/Pizzaria.Mobile.csproj -p:TargetFramework=net10.0-windows10.0.19041.0 -p:RuntimeIdentifier=win-x64
+          dotnet build src/Pizzaria.Mobile/Pizzaria.Mobile.csproj --configuration Release -p:TargetFramework=net10.0-windows10.0.19041.0 -p:RuntimeIdentifier=win-x64 --no-restore
