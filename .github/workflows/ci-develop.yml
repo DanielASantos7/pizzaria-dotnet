@@ -1,0 +1,54 @@
+# Nome que aparecerá no painel de "Actions" do repositório no GitHub
+name: Continuous Integration - Develop
+
+# Triggers - Define exatamente quando este pipeline automático deve disparar
+on:
+  push:
+    branches: [ "develop", "feature/**" ]        # Dispara o pipeline em pushes na branch develop e em branches de feature
+  pull_request:
+    branches: [ "develop" ]        # Quando um PR for aberto ou atualizado para a branch develop, dispara o pipeline
+
+# Jobs - Um job representa um ambiente isolado (virtual machine) para executar os passos.
+jobs: 
+  build-and-validate:
+    name: Validar Compilação da Solução (.NET 8 & 10)
+
+    # windows-latest para dar suporte à compilação do WinForms e workloads do Mobile (.NET MAUI)
+    runs-on: windows-latest
+
+    # steps - lista sequencial de passos do início ao fim
+    steps: 
+      # Clona o código fonte para a VM do GitHub
+      - name: Checkout do Repositório
+        uses: actions/checkout@v4
+
+      # Baixa e instala os SDKs do .NET exigidos pelos projetos da solução
+      - name: Configurar SDKs do .NET (8.0 & 10.0)
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            10.0.x
+          include-prerelease: true        # Habilita suporte para versões pré-lançamento/preview (.NET 10)
+
+      # Instala APENAS as workloads do .NET MAUI para Android e Windows (evita baixar iOS/Mac no runner Windows)
+      - name: Instalar Workloads do .NET MAUI (Android & Windows)
+        run: dotnet workload install maui-android maui-windows --ignore-failed-sources
+
+      # Restaura e compila o projeto da API (.NET 8)
+      - name: Compilar API (.NET 8)
+        run: |
+          dotnet restore src/Pizzaria.API/Pizzaria.API.csproj
+          dotnet build src/Pizzaria.API/Pizzaria.API.csproj --configuration Release --no-restore
+
+      # Restaura e compila o App MAUI direcionado para Android (.NET 10)
+      - name: Compilar MAUI Android (.NET 10)
+        run: |
+          dotnet restore src/Pizzaria.Mobile/Pizzaria.Mobile.csproj -p:TargetFramework=net10.0-android
+          dotnet build src/Pizzaria.Mobile/Pizzaria.Mobile.csproj --configuration Release -p:TargetFramework=net10.0-android --no-restore
+
+      # Restaura e compila o App MAUI direcionado para Windows Desktop (.NET 10)
+      - name: Compilar MAUI Windows Desktop (.NET 10)
+        run: |
+          dotnet restore src/Pizzaria.Mobile/Pizzaria.Mobile.csproj -p:TargetFramework=net10.0-windows10.0.19041.0 -p:RuntimeIdentifier=win-x64
+          dotnet build src/Pizzaria.Mobile/Pizzaria.Mobile.csproj --configuration Release -p:TargetFramework=net10.0-windows10.0.19041.0 -p:RuntimeIdentifier=win-x64 --no-restore
